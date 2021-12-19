@@ -4,6 +4,7 @@ Paddle::Paddle()
 	: Object()
 {
 	m_MovementSpeed = 1.0f;
+	m_Score = 0;
 }
 
 Paddle::Paddle(Mesh* mesh, glm::vec3 position, glm::vec3 scale, GLuint modelLocation, GLfloat movementSpeed, GLint bufferHeight, GLint bufferWidth) :
@@ -13,6 +14,7 @@ Paddle::Paddle(Mesh* mesh, glm::vec3 position, glm::vec3 scale, GLuint modelLoca
 	m_MovementSpeed = movementSpeed;
 	m_BufferHeight = bufferHeight;
 	m_BufferWidth = bufferWidth;
+	m_Score = 0;
 }
 
 void Paddle::Reset()

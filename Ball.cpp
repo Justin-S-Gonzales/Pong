@@ -50,20 +50,18 @@ void Ball::Start()
 void Ball::SetRandomBounce()
 {
 	// Bounces off in random direction
-	if (m_Direction.x > 0 && m_Direction.y > m_Direction.x)
-		m_Direction.x += 10.0f / ((rand() % 50) + 3.0f);
+	if (m_Direction.x > 0)
+		m_Direction.x += (100.0f / (rand() % 100)) + 3.0f;
+	if (m_Direction.x < 0)
+		m_Direction.x -= (100.0f / (rand() % 100)) + 3.0f;
 
-	else if (m_Direction.x < 0 && m_Direction.y > m_Direction.x)
-		m_Direction.x -= 10.0f / ((rand() % 50) + 3.0f);
-
-	if (m_Direction.y > 0 && m_Direction.x > m_Direction.y)
-		m_Direction.y += 5.0f / ((rand() % 50 ) + 3.0f);
-
-	else if (m_Direction.y < 0 && m_Direction.x > m_Direction.y)
-		m_Direction.y -= 5.0f / ((rand() % 50) + 3.0f);
+	if (m_Direction.y > 0)
+		m_Direction.y += (100.0f / (rand() % 100)) + 3.0f;
+	if (m_Direction.y < 0)
+		m_Direction.y -= (100.0f / (rand() % 100)) + 3.0f;
 
 	// Add a little bit of speed to make more difficult to return, just like real life
-	m_MovementSpeed += 12.0f;
+	m_MovementSpeed += 30.0f;
 }
 
 void Ball::Update(Paddle& paddle1, Paddle& paddle2, GLfloat& deltaTime)
@@ -71,9 +69,20 @@ void Ball::Update(Paddle& paddle1, Paddle& paddle2, GLfloat& deltaTime)
 	// Move position by direction
 	m_Position += m_Direction * deltaTime * m_MovementSpeed;
 
+	m_Direction = glm::vec3(glm::vec2(glm::normalize(m_Direction)), 0.0f);
+
+
+	if (m_Direction.x == 0.0f || m_Direction.y == 0.0f)
+		m_Direction = glm::vec3(0.9f, 0.4f, 0.0f);
+
 	// It gets past either paddle
-	if (m_Position.x > m_BufferWidth / 2|| m_Position.x < -m_BufferWidth / 2)
+	if (m_Position.x > m_BufferWidth / 2 || m_Position.x < -m_BufferWidth / 2)
 	{
+		if (m_Position.x > m_BufferWidth / 2)
+			paddle1.IncrScore();
+		else
+			paddle2.IncrScore();
+
 		paddle1.Reset(); 
 		paddle2.Reset();
 		Start();
@@ -84,15 +93,22 @@ void Ball::Update(Paddle& paddle1, Paddle& paddle2, GLfloat& deltaTime)
 	if (m_Position.y > m_BufferHeight / 2 || m_Position.y < -m_BufferHeight / 2)
 	{
 		m_Direction.y = -m_Direction.y;
+	
+		if (m_Position.y + m_Scale.y > m_BufferHeight / 2)
+			m_Position.y -= 10.0f;
+		if (m_Position.y - m_Scale.y < -m_BufferHeight / 2)
+			m_Position.y += 10.0f;
+
+		SetRandomBounce();
 	}
 
 	// Paddle 1 bounces it back
 	if (
-		(m_Position.x) < (paddle1.GetPosition().x + paddle1.GetScale().x) && 
-		(m_Position.x) > (paddle1.GetPosition().x - paddle1.GetScale().x) &&
-		(m_Position.y) < (paddle1.GetPosition().y + paddle1.GetScale().y) &&
-		(m_Position.y) > (paddle1.GetPosition().y - paddle1.GetScale().y)
-		)
+		(m_Position.x - (m_Scale.x / 2)) < paddle1.GetPosition().x + (paddle1.GetScale().x / 2) &&
+		(m_Position.x + (m_Scale.x / 2)) > paddle1.GetPosition().x - (paddle1.GetScale().x / 2) &&
+		(m_Position.y - (m_Scale.y / 2)) < paddle1.GetPosition().y + (paddle1.GetScale().y / 2) &&
+		(m_Position.y + (m_Scale.y / 2)) > paddle1.GetPosition().y - (paddle1.GetScale().y / 2)
+	)
 	{
 		m_Direction.x = -m_Direction.x + 0.4f;
 		m_Position.x += 5.0f;
@@ -102,10 +118,10 @@ void Ball::Update(Paddle& paddle1, Paddle& paddle2, GLfloat& deltaTime)
 
 	// Paddle 2 bounces it back
 	if (
-		(m_Position.x) < (paddle2.GetPosition().x + paddle2.GetScale().x) &&
-		(m_Position.x) > (paddle2.GetPosition().x - paddle2.GetScale().x) &&
-		(m_Position.y) < (paddle2.GetPosition().y + paddle2.GetScale().y) &&
-		(m_Position.y) > (paddle2.GetPosition().y - paddle2.GetScale().y)
+		(m_Position.x - (m_Scale.x / 2)) < paddle2.GetPosition().x + (paddle2.GetScale().x / 2) &&
+		(m_Position.x + (m_Scale.x / 2)) > paddle2.GetPosition().x - (paddle2.GetScale().x / 2) &&
+		(m_Position.y - (m_Scale.y / 2)) < paddle2.GetPosition().y + (paddle2.GetScale().y / 2) &&
+		(m_Position.y + (m_Scale.y / 2)) > paddle2.GetPosition().y - (paddle2.GetScale().y / 2)
 		)
 	{
 		m_Direction.x = -m_Direction.x - 0.4f;
