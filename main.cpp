@@ -7,12 +7,12 @@
 #include <glm\gtc\type_ptr.hpp>
 
 // For fonts
-#include "ft2build.h"
-#include FT_FREETYPE_H  
+//#include "ft2build.h"
+//#include FT_FREETYPE_H  
 
 #include <iostream>
 #include <vector>
-#include <map>
+//#include <map>
 #include <memory>
 
 #include "Window.h"
@@ -94,6 +94,21 @@ int main()
 
 		paddle2->KeyMove(window.GetKeys(), deltaTime, GLFW_KEY_UP, GLFW_KEY_DOWN);
 		paddle2->Render();
+
+		std::cout << "\r" << "SCORE      "
+			<< "PLAYER 1: " << paddle1->GetScore()
+			<< "       PLAYER 2: " << paddle2->GetScore();
+
+		if (paddle1->GetScore() > 4)
+		{
+			std::cout << std::endl << "PLAYER 1 WINS" << std::endl;
+			return 0;
+		}
+		else if (paddle2->GetScore() > 4)
+		{
+			std::cout << std::endl << "PLAYER 2 WINS" << std::endl;
+			return 0;
+		}
 
 		window.SwapBuffers();
 	}
