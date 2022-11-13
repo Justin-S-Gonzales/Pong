@@ -1,0 +1,6 @@
+﻿  main.cpp
+C:\Users\justi\Documents\Visual Studio 2019\Projects\Pong\Pong\main.cpp(33,23): warning C4244: 'argument': conversion from 'float' to 'unsigned int', possible loss of data
+C:\Users\justi\Documents\Visual Studio 2019\Projects\Pong\Pong\main.cpp(33,16): warning C4244: 'argument': conversion from 'float' to 'unsigned int', possible loss of data
+C:\Users\justi\Documents\Visual Studio 2019\Projects\Pong\Pong\main.cpp(75,20): warning C4244: '=': conversion from 'double' to 'GLfloat', possible loss of data
+LINK : warning LNK4098: defaultlib 'MSVCRT' conflicts with use of other libs; use /NODEFAULTLIB:library
+  Pong.vcxproj -> C:\Users\justi\Documents\Visual Studio 2019\Projects\Pong\Debug\Pong.exe
